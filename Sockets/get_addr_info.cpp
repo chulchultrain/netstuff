@@ -113,8 +113,8 @@ void set_up_connection(char *home_port,char *away_host, char *away_port) {
   memset(&hints,0,sizeof hints);
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
-  hints.ai_flags = AI_PASSIVE;
-  int ac = getaddrinfo(NULL,away_port,&hints,&res);
+  //hints.ai_flags = AI_PASSIVE;
+  int ac = getaddrinfo(away_host,away_port,&hints,&res);
   printf("AWAY PORT IS %s\n",away_port);
   if(ac != 0) {
     printf("FAIL ADDRINFO\n");
@@ -150,15 +150,15 @@ int main(int nargs, char** args) {
     print_addr_info(args[i]);
   }
   */
-  if(nargs != 4) {
-    printf("Usage <myport> <their_port> <whichone>");
+  if(nargs != 5) {
+    printf("Usage <myport> <their_ip> <their_port> <whichone>");
     return 1;
   }
   if(args[3][0] == '1') {
     set_up_server(args[1]);
 
   } else {
-    set_up_connection(args[1],NULL,args[2]);
+    set_up_connection(args[1],args[2],args[3]);
   }
   return 0;
 }
