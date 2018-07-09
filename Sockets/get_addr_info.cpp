@@ -154,7 +154,7 @@ int main(int nargs, char** args) {
     printf("Usage <myport> <their_ip> <their_port> <whichone>");
     return 1;
   }
-  if(args[3][0] == '1') {
+  if(args[4][0] == '1') {
     set_up_server(args[1]);
 
   } else {
