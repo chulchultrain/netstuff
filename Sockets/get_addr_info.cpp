@@ -50,7 +50,7 @@ int socket_on_port(char *host,char *port) {
   addrinfo hints, *res;
   memset(&hints,0,sizeof hints);
   hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_STREAM;
+  //hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
   getaddrinfo(NULL,port,&hints,&res);
   int s_fd = socket(res->ai_family,res->ai_socktype,res->ai_protocol);
