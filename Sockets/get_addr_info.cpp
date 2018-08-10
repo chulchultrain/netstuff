@@ -55,6 +55,7 @@ int socket_on_port(char *host,char *port) {
   getaddrinfo(NULL,port,&hints,&res);
   int s_fd = socket(res->ai_family,res->ai_socktype,res->ai_protocol);
   bind(s_fd,res->ai_addr,res->ai_addrlen);
+  freeaddrinfo(res);
   return s_fd;
 }
 
@@ -129,6 +130,7 @@ void set_up_connection(char *home_port,char *away_host, char *away_port) {
     printf("RETCODE is %d\n",ret_code);
     printf("%s\n",strerror(errno));
   }
+  freeaddrinfo(res);
   close(home_socket);
 }
 

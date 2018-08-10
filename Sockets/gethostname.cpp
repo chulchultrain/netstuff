@@ -18,6 +18,7 @@ int socket_on_port(char *port) {
   addrinfo hints, *res;
   memset(&hints,0,sizeof hints);
   hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_DGRAM;
   hints.ai_flags = AI_PASSIVE;
   getaddrinfo(NULL,port,&hints,&res);
   int s = socket(res->ai_family,res->ai_socktype,res->ai_protocol);
@@ -25,12 +26,14 @@ int socket_on_port(char *port) {
     printf("%s\n",strerror(errno));
     exit(1);
   }
-  freeaddrinfo(res);
+
   int ret_code = bind(s,res->ai_addr,res->ai_addrlen);
+  freeaddrinfo(res);
   if(ret_code != 0) {
     printf("%s\n",strerror(errno));
     exit(1);
   }
+  fcntl(s,F_SETFL,O_NONBLOCK);
   return s;
 }
 
@@ -39,7 +42,9 @@ void set_up_server(char *port) {
   sockaddr their_addr;
   socklen_t their_addr_size = sizeof their_addr;
   char buf[4096] = {0};
-  recvfrom(home_socket,buf,4096,0,&their_addr,&their_addr_size);
+  printf("HI\n");
+  int ret_code = recvfrom(home_socket,buf,4096,0,&their_addr,&their_addr_size);
+  printf("FIN RECV\n");
   printf("%s\n",buf);
 }
 
@@ -56,9 +61,17 @@ void send_dgram(char *home_port, char *away_host, char *away_port) {
   }
   char msg[4096] = {'a','b','x','y','z'};
   sockaddr their_addr;
+
   sendto(home_socket,msg,4096,0,res->ai_addr,res->ai_addrlen);
 
 }
+/*
+  plan set up 3 different listening sockets.
+  and 3 different sending sockets.
+  and send data through them and then select them and then read the data.
+
+
+*/
 
 
 int main(int nargs, char** args) {
